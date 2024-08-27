@@ -22,6 +22,15 @@ var __rest = (this && this.__rest) || function (s, e) {
 };
 import React, { useEffect } from 'react';
 import Hls from 'hls.js';
+export var HlsMimeType;
+(function (HlsMimeType) {
+    HlsMimeType["M3U8"] = "application/vnd.apple.mpegurl";
+    HlsMimeType["M4A"] = "audio/mp4";
+    HlsMimeType["M4S"] = "video/iso.segment";
+    HlsMimeType["M4V"] = "video/mp4";
+    HlsMimeType["MP4"] = "video/mp4";
+    HlsMimeType["TS"] = "video/mp2t";
+})(HlsMimeType || (HlsMimeType = {}));
 function ReactHlsPlayer(_a) {
     var hlsConfig = _a.hlsConfig, _b = _a.playerRef, playerRef = _b === void 0 ? React.createRef() : _b, src = _a.src, autoPlay = _a.autoPlay, props = __rest(_a, ["hlsConfig", "playerRef", "src", "autoPlay"]);
     useEffect(function () {

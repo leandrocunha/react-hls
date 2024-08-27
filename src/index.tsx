@@ -1,18 +1,41 @@
 import React, { useEffect, RefObject } from 'react';
+
 import Hls, { Config } from 'hls.js';
+
+export enum HlsMimeType {
+  M3U8 = 'application/vnd.apple.mpegurl',
+
+  M4A = 'audio/mp4',
+
+  M4S = 'video/iso.segment',
+
+  M4V = 'video/mp4',
+
+  MP4 = 'video/mp4',
+
+  TS = 'video/mp2t',
+}
 
 export interface HlsPlayerProps
   extends React.VideoHTMLAttributes<HTMLVideoElement> {
   hlsConfig?: Config;
+
   playerRef: RefObject<HTMLVideoElement>;
+
   src: string;
+
+  type: HlsMimeType;
 }
 
 function ReactHlsPlayer({
   hlsConfig,
+
   playerRef = React.createRef<HTMLVideoElement>(),
+
   src,
+
   autoPlay,
+
   ...props
 }: HlsPlayerProps) {
   useEffect(() => {
@@ -25,6 +48,7 @@ function ReactHlsPlayer({
 
       const newHls = new Hls({
         enableWorker: false,
+
         ...hlsConfig,
       });
 
@@ -38,7 +62,9 @@ function ReactHlsPlayer({
         newHls.on(Hls.Events.MANIFEST_PARSED, () => {
           if (autoPlay) {
             playerRef?.current
+
               ?.play()
+
               .catch(() =>
                 console.log(
                   'Unable to autoplay prior to user interaction with the dom.'
@@ -53,12 +79,17 @@ function ReactHlsPlayer({
           switch (data.type) {
             case Hls.ErrorTypes.NETWORK_ERROR:
               newHls.startLoad();
+
               break;
+
             case Hls.ErrorTypes.MEDIA_ERROR:
               newHls.recoverMediaError();
+
               break;
+
             default:
               _initPlayer();
+
               break;
           }
         }
@@ -68,6 +99,7 @@ function ReactHlsPlayer({
     }
 
     // Check for Media Source support
+
     if (Hls.isSupported()) {
       _initPlayer();
     }
@@ -80,9 +112,11 @@ function ReactHlsPlayer({
   }, [autoPlay, hlsConfig, playerRef, src]);
 
   // If Media Source is supported, use HLS.js to play video
+
   if (Hls.isSupported()) return <video ref={playerRef} {...props} />;
 
   // Fallback to using a regular video player if HLS is supported by default in the user's browser
+
   return <video ref={playerRef} src={src} autoPlay={autoPlay} {...props} />;
 }
 
